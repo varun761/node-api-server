@@ -16,7 +16,9 @@ const UsersSchema=new Schema({
 		state: {type : String , default:''},
 		postal_code: {type: Number,default:0}
 	},
-	isVerified:{type:Boolean, default:false}
+	isVerified:{type:Boolean, default:false},
+	verificationlink:{type: String},
+	lastverification:{type: Date}
 },{timestamps: { createdAt: 'created_at' }})
 UsersSchema.index({ username: 1 })
 UsersSchema.index({ email: 1 })

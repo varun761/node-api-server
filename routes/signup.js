@@ -14,11 +14,11 @@ signup.post('/create',( req,res ) => {
 	//PROCEED WITH SAVING DATA
 	SignupObj.checkUsername(req.body.username).then(existsuser=>{
 		if(existsuser){
-			return res.status(400).json({error:"Username Exists"})
+			return res.status(200).json({error:"Username Exists"})
 		}else{
 			SignupObj.checkEmail(req.body.email).then(existsemail=>{
 				if(existsemail){
-					return res.status(400).json({error:"Email Exists"})
+					return res.status(200).json({error:"Email Exists"})
 				}else{
 					SignupObj.createUser(req.body).then(users=>{
 						res.status(200).json(users)

@@ -1,7 +1,7 @@
 const User = require('../db/models/users');
 const bcrypt = require('bcryptjs')
 const Joi= require('joi')
-
+const crypto = require('crypto')
 
 function SignupClass(){
 }
@@ -68,10 +68,22 @@ SignupClass.prototype.createUser=function(userdata){
 				if(err){
 					reject(err)
 				}
-				resolve(user)
+				createVerifyLink(user._id).then(hmacdata=>{
+					resolve(hmacdata)
+				}).catch(err=>{
+					console.log(err)
+				})
 			})
 		})
 	})
 	
+}
+function createVerifyLink (userdata){
+	return new Promise((resolve,reject)=>{
+		let hmac = crypto.createHmac('sha256', userdata);
+		hmac.on('readable',()=>{
+			console.log(hmac.read);
+		})
+	})
 }
 module.exports= SignupClass
