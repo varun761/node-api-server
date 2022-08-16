@@ -1,4 +1,5 @@
-const { postModel } = require("../database/models");
+const { Types } = require("mongoose");
+const { postModel, userModel } = require("../database/models");
 
 exports.create = async (req, res) => {
   try {
@@ -9,6 +10,12 @@ exports.create = async (req, res) => {
       author: req.authorized,
     });
     await post.save();
+    // save post with user
+    const user = await userModel.findOne({
+      _id: req.authorized
+    })
+    user.posts.push(post)
+    await user.save()
     return res.status(201).json({
       message: "Post created successfully",
     });
