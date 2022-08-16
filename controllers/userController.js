@@ -1,14 +1,17 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const { userModel } = require("../database/models/");
 
 exports.createUser = async (req, res) => {
   try {
     const { name, email, password, dob } = req.body;
+    const salt = await bcrypt.genSaltSync(10);
+    const bcryptPassword = await bcrypt.hashSync(password, salt);
     const user = new userModel({
       name,
       email,
       dob,
-      password,
+      password: bcryptPassword,
     });
     await user.save();
     return res.status(201).json({

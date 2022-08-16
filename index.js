@@ -10,7 +10,7 @@ const connectToDB = require('./database')
 
 const app = express()
 
-const { userRouter , authRouter } = require('./routes')
+const { userRouter , authRouter, postRouter } = require('./routes')
 
 app.get('/', (req, res) => {
 	res.send('API IS RUNNING')
@@ -21,6 +21,8 @@ app.use(bodyParser.json())
 app.use('/user', userRouter)
 
 app.use('/auth', authRouter)
+
+app.use('/post', postRouter)
 
 const port = process.env.APPLICATION_PORT || 5001
 

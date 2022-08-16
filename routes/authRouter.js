@@ -2,8 +2,8 @@ const express = require('express')
 const { validate } = require('express-validation')
 const authValidation = require('../validations/authValidation')
 const authController = require('../controllers/authController')
-const authRouters = express()
+const authRouter = express()
 
-authRouters.post('/', validate(authValidation.loginValidation), authController.login)
+authRouter.post('/', validate(authValidation.loginValidation), authController.login)
 
-module.exports = authRouters
+module.exports = authRouter

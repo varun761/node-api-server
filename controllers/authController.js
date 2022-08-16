@@ -28,8 +28,8 @@ exports.login = async (req, res) => {
 
         const token = jwt.sign({
             subject: user.email,
-            issuer: process.env.JWT_ISSUER,
-            audience: process.env.JWT_CONSUMER,
+            // issuer: process.env.JWT_ISSUER,
+            // audience: process.env.JWT_CONSUMER,
             algorithm:  "RS256"
         }, process.env.JWT_SECRET, { expiresIn: 60 * 60 })
 
