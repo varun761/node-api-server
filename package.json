@@ -1,26 +1,22 @@
 {
-  "name": "api-server",
+  "name": "sample-api-intern",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install-dep": "npm install",
+    "start": "nodemon index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/varun761/node-api-server.git"
-  },
-  "author": "Varun",
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/varun761/node-api-server/issues"
-  },
-  "homepage": "https://github.com/varun761/node-api-server#readme",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "morgan": "^1.10.0"
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.20.0",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-validation": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.4",
+    "mongoose": "^6.4.4"
   }
 }
