@@ -4,6 +4,8 @@ const express = require('express')
 
 const { ValidationError } = require('express-validation')
 
+const morgan = require('morgan')
+
 const bodyParser = require('body-parser')
 
 const connectToDB = require('./database')
@@ -15,6 +17,8 @@ const { userRouter , authRouter, postRouter } = require('./routes')
 app.get('/', (req, res) => {
 	res.send('API IS RUNNING')
 })
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
 app.use(bodyParser.json())
 
