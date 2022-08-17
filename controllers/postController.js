@@ -37,9 +37,9 @@ exports.list = async (req, res) => {
     }
     const posts = await postModel
       .find(
-        {}
+        {},
       )
-      .populate('author')
+      .populate('author', 'first_name last_name dob')
       .limit(limit)
       .skip(skip);
     return res.status(200).json({
@@ -52,3 +52,27 @@ exports.list = async (req, res) => {
     });
   }
 };
+
+exports.listById = async (req, res) => {
+  try {
+    let { limit, skip } = req.params;
+    if (!limit) {
+      limit = 10;
+    }
+    if (!skip) {
+      skip = 0;
+    }
+    const posts = await postModel
+      .find({ author: req.authorized}, { title: 1, description: 1, created_at: 1, author: 1 })
+      .limit(limit)
+      .skip(skip);
+    return res.status(200).json({
+      posts,
+      message: "Post list successfully",
+    });
+  } catch (e) {
+    return res.status(500).json({
+      message: e.message,
+    });
+  }
+}

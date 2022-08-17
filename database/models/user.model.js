@@ -29,10 +29,10 @@ const userSchema = new Schema(
     token: {
       type: String,
     },
-    posts: {
+    posts: [{
       type: Schema.Types.ObjectId,
       ref: "Post"
-    }
+    }]
   },
   {
     timestamps: {

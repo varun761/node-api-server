@@ -5,7 +5,8 @@ const postController = require('../controllers/postController')
 const verifyUser = require('../middleware/verifyUser')
 const postRouter = express()
 
-postRouter.post('/', validate(postValidation.createPostValidation), verifyUser,postController.create)
+postRouter.post('/', validate(postValidation.createPostValidation), verifyUser, postController.create)
 .get('/', postController.list)
+.get('/by-author', verifyUser, postController.listById)
 
 module.exports = postRouter
