@@ -1,12 +1,12 @@
 const express = require('express')
 const { validate } = require('express-validation')
-const postValidation = require('../validations/postValidation')
-const postController = require('../controllers/postController')
+const { createPostValidation } = require('../validations/postValidation')
+const { create, list, listById} = require('../controllers/postController')
 const verifyUser = require('../middleware/verifyUser')
 const postRouter = express()
 
-postRouter.post('/', validate(postValidation.createPostValidation), verifyUser, postController.create)
-.get('/', postController.list)
-.get('/by-author', verifyUser, postController.listById)
+postRouter.post('/', verifyUser, validate(createPostValidation), create)
+.get('/', list)
+.get('/by-author', verifyUser, listById)
 
 module.exports = postRouter

@@ -26,12 +26,16 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    token: {
-      type: String,
-    },
+    // token: {
+    //   type: String,
+    // },
     posts: [{
       type: Schema.Types.ObjectId,
       ref: "Post"
+    }],
+    comments: [{
+      type: Schema.Types.ObjectId,
+      ref: "Comment"
     }]
   },
   {
