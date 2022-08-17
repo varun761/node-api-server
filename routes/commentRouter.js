@@ -5,6 +5,6 @@ const verifyUser = require('../middleware/verifyUser')
 const { createCommentValidation } = require('../validations/commentValidation')
 const commentRouter = express()
 
-commentRouter.post('/', verifyUser, validate(createCommentValidation), create)
+commentRouter.post('/:post_id', verifyUser, validate(createCommentValidation), create)
 
 module.exports = commentRouter

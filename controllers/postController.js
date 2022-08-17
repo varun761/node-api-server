@@ -40,6 +40,7 @@ exports.list = async (req, res) => {
         {},
       )
       .populate('author', 'first_name last_name dob')
+      .populate('comments', 'comment created_at')
       .limit(limit)
       .skip(skip);
     return res.status(200).json({

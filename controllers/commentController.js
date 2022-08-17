@@ -3,8 +3,8 @@ const { postModel, commentModel, userModel } = require("../database/models");
 
 exports.create = async (req, res) => {
     try {
+        const { post_id } = req.params
         const {
-            post_id,
             comment
         } = req.body
         const comments = new commentModel({
@@ -17,14 +17,14 @@ exports.create = async (req, res) => {
         const post = await postModel.findOne({
             _id: post_id
         })
-        post.comment.push(comments)
-        post.save()
+        post.comments.push(comments)
+        await post.save()
         // update user
         const user = await userModel.findOne({
             _id: req.authorized
         })
         user.comments.push(comments)
-        user.save()
+        await user.save()
         // send response
         return res.status(201).json({
             message: "Comment created successfully",
