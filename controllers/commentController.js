@@ -1,7 +1,8 @@
 const { Types } = require("mongoose");
 const { postModel, commentModel, userModel } = require("../database/models");
+const { apiResponse, responseCodes } = require("../utility/commonUtility");
 
-exports.create = async (req, res) => {
+exports.createComment = async (req, res) => {
     try {
         const { post_id } = req.params
         const {
@@ -13,25 +14,53 @@ exports.create = async (req, res) => {
             author: req.authorized,
         });
         await comments.save();
-        // update post
-        const post = await postModel.findOne({
-            _id: post_id
-        })
-        post.comments.push(comments)
-        await post.save()
-        // update user
-        const user = await userModel.findOne({
-            _id: req.authorized
-        })
-        user.comments.push(comments)
-        await user.save()
-        // send response
-        return res.status(201).json({
-            message: "Comment created successfully",
-        });
+        return apiResponse(res, responseCodes.CREATED_OK, "Comment created successfully");
     } catch(e) {
-        return res.status(500).json({
-            message: e.message,
-        });
+        return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
+    }
+}
+
+const deleteSingleComment = (doc) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // fetch posts data
+            await commentModel.deleteOne({
+                _id: doc._id
+            })
+            // update post
+            await postModel.findOneAndUpdate({
+                _id: doc.post
+            }, {
+                $pull: {
+                    comments: doc._id
+                }
+            })
+            // update user
+            await userModel.findOneAndUpdate({
+                _id: doc.author
+            }, {
+                $pull: {
+                    comments: doc._id
+                }
+            })
+            resolve(true)
+        } catch(e) {
+            reject(e)
+        }
+    })
+}
+
+exports.deleteComment = async (req, res) => {
+    try {
+        const { id } = req.params
+        const commentDoc = await commentModel.findOne({
+            _id: id,
+            author: req.authorized
+        })
+        if (!commentDoc) return apiResponse(res, responseCodes.NOT_FOUND, "Failed to deleted. No comment found.")
+        await deleteSingleComment(commentDoc)
+        return apiResponse(res, responseCodes.CREATED_OK, "Comment deleted successfully");
+    } catch(e) {
+        return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
     }
 }

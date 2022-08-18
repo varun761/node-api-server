@@ -1,7 +1,7 @@
-const { Types } = require("mongoose");
-const { postModel, userModel } = require("../database/models");
+const { postModel, userModel, commentModel } = require("../database/models");
+const { apiResponse, responseCodes } = require("../utility/commonUtility");
 
-exports.create = async (req, res) => {
+exports.createPost = async (req, res) => {
   try {
     const { title, description } = req.body;
     const post = new postModel({
@@ -10,23 +10,13 @@ exports.create = async (req, res) => {
       author: req.authorized,
     });
     await post.save();
-    // save post with user
-    const user = await userModel.findOne({
-      _id: req.authorized
-    })
-    user.posts.push(post)
-    await user.save()
-    return res.status(201).json({
-      message: "Post created successfully",
-    });
+    return apiResponse(res, responseCodes.CREATED_OK, "Post created successfully");
   } catch (e) {
-    return res.status(500).json({
-      message: e.message,
-    });
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
 };
 
-exports.list = async (req, res) => {
+exports.listPosts = async (req, res) => {
   try {
     let { limit, skip } = req.params;
     if (!limit) {
@@ -43,18 +33,15 @@ exports.list = async (req, res) => {
       .populate('comments', 'comment created_at')
       .limit(limit)
       .skip(skip);
-    return res.status(200).json({
-      posts,
-      message: "Post list successfully",
-    });
+    return apiResponse(res, responseCodes.SUCCESS, null, {
+      posts
+    })
   } catch (e) {
-    return res.status(500).json({
-      message: e.message,
-    });
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
 };
 
-exports.listById = async (req, res) => {
+exports.listPostById = async (req, res) => {
   try {
     let { limit, skip } = req.params;
     if (!limit) {
@@ -67,13 +54,56 @@ exports.listById = async (req, res) => {
       .find({ author: req.authorized}, { title: 1, description: 1, created_at: 1, author: 1 })
       .limit(limit)
       .skip(skip);
-    return res.status(200).json({
-      posts,
-      message: "Post list successfully",
+    return apiResponse(res, responseCodes.SUCCESS, null, {
+      posts
     });
   } catch (e) {
-    return res.status(500).json({
-      message: e.message,
-    });
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
+  }
+}
+
+const deleteSinglePost = (doc) => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          // delete post data
+          await postModel.deleteOne({
+              _id: doc._id
+          })
+          // delete comment data
+          await commentModel.deleteMany({
+              _id: {
+                $in: doc.comments
+              }
+          })
+          // update user
+          await userModel.findOneAndUpdate({
+              _id: doc.author
+          }, {
+              $pull: {
+                  posts: doc._id,
+                  comments: {
+                    $in: doc.comments
+                  }
+              }
+          })
+          resolve(true)
+      } catch(e) {
+          reject(e)
+      }
+  })
+}
+
+exports.deletePost = async () => {
+  try {
+    const { id } = req.params
+    const postDoc = await postModel.findOne({
+      _id: id,
+      author: req.authorized
+  })
+  if (!postDoc) return apiResponse(res, responseCodes.NOT_FOUND, "Failed to deleted. No post found.")
+    await deleteSinglePost(postDoc)
+    return apiResponse(res, responseCodes.CREATED_OK, "Comment deleted successfully");
+  } catch(e) {
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
 }

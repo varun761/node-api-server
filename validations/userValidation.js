@@ -1,5 +1,4 @@
 const { Joi } = require("express-validation");
-const mongoose = require("mongoose")
 
 exports.createUserValidation = {
   body: Joi.object({
@@ -11,19 +10,3 @@ exports.createUserValidation = {
       .required(),
   }),
 };
-
-const singleDetailsOrDelete = {
-  params: Joi.object({
-    id: Joi.string()
-      .required()
-      .custom((value, helper) => {
-        if (!mongoose.Types.ObjectId.isValid(value)) {
-          return helper.message('Id must be a valid string.');
-        }
-      }),
-  }),
-};
-
-exports.detailsUserValidation = singleDetailsOrDelete;
-
-exports.deleteUserValidation = singleDetailsOrDelete;

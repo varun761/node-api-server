@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const userModel = require("./user.model");
 
 const postSchema = new Schema(
   {
@@ -31,6 +32,22 @@ const postSchema = new Schema(
     },
   }
 );
+
+postSchema.post("save", async function (doc) {
+  try {
+    // remove comments from user
+    await userModel.findOneAndUpdate({
+      _id: doc.author,
+      posts: { $nin: [doc._id] }
+    }, {
+      $push: {
+        posts: doc._id
+      }
+    })
+  } catch(e) {
+    throw new Error(e.message)
+  }
+})
 
 const postModel = new model("Post", postSchema);
 

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const { userModel } = require("../database/models/");
+const { apiResponse, responseCodes } = require("../utility/commonUtility");
 
 exports.createUser = async (req, res) => {
   try {
@@ -14,13 +15,9 @@ exports.createUser = async (req, res) => {
       password: bcryptPassword,
     });
     await user.save();
-    return res.status(201).json({
-      message: "User created successfully",
-    });
+    return apiResponse(res, responseCodes.CREATED_OK, "User created successfully");
   } catch (e) {
-    return res.status(500).json({
-      message: e.message,
-    });
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
 };
 
@@ -46,14 +43,11 @@ exports.listUsers = async (req, res) => {
       )
       .limit(limit)
       .skip(skip);
-    return res.status(200).json({
-      users: usersListing,
-      message: "User list successfully",
+    return apiResponse(res, responseCodes.SUCCESS, {
+      users: usersListing
     });
   } catch (e) {
-    return res.status(500).json({
-      message: e.message,
-    });
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
 };
 
@@ -63,13 +57,9 @@ exports.deleteUser = async (req, res) => {
     await userModel.findOneAndDelete({
       _id: mongoose.Types.ObjectId(id),
     });
-    return res.status(200).json({
-      message: "User deleted successfully",
-    });
+    return apiResponse(res, responseCodes.SUCCESS, "User deleted successfully");
   } catch (e) {
-    return res.status(500).json({
-      message: e.message,
-    });
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
 };
 
@@ -88,17 +78,12 @@ exports.getUserDetails = async (req, res) => {
       }
     );
     if (!userDetails) {
-      return res.status(403).json({
-        message: "No user exists.",
-      });
+      return apiResponse(res, responseCodes.METHOD_NOT_ALLOWED, "No user exists.");
     }
-    return res.status(200).json({
-      user: userDetails,
-      message: "User list successfully.",
+    return apiResponse(res, responseCodes.SUCCESS, null, {
+      user: userDetails
     });
   } catch (e) {
-    return res.status(500).json({
-      message: e.message,
-    });
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
 };
