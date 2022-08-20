@@ -93,7 +93,9 @@ const deleteSinglePost = (doc) => {
   })
 }
 
-exports.deletePost = async () => {
+exports.deletePostHandler = deleteSinglePost
+
+exports.deletePost = async (req, res) => {
   try {
     const { id } = req.params
     const postDoc = await postModel.findOne({

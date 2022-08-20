@@ -1,5 +1,7 @@
 require('dotenv').config()
 
+const MONGODB_URL = process.env.MONGODB_URL || null
+
 const express = require('express')
 
 const { ValidationError } = require('express-validation')
@@ -40,6 +42,8 @@ app.use(function(err, req, res, next) {
 })
 
 app.listen(port, async () => {
-	await connectToDB();
+  if (MONGODB_URL) {
+	  await connectToDB(MONGODB_URL);
+  }
 	console.log(`app is listening on port ${port}`)
 })

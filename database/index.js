@@ -1,18 +1,15 @@
 const mongoose = require('mongoose')
-require('dotenv').config()
 
-const MONGODB_URL = process.env.MONGODB_URL
-
-const connectToDB = async () => {
+const connectToDB = async (url) => {
 	try {
-		await mongoose.connect(MONGODB_URL, {
+		await mongoose.connect(url, {
             autoIndex: false,
             maxPoolSize: 10,
             serverSelectionTimeoutMS: 5000,
             socketTimeoutMS: 45000,
 			autoIndex: true
         })
-		console.log(`connected to db ${MONGODB_URL}`)
+		console.log(`connected to db ${url}`)
 	} catch(e) {
 		console.log(e)
 		process.exit(1)
