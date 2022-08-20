@@ -1,4 +1,5 @@
 # RestFul API server
+[![CodeFactor](https://www.codefactor.io/repository/github/varun761/node-api-server/badge)](https://www.codefactor.io/repository/github/varun761/node-api-server)
 Example of restfull API server with jwt authetication
 
 # Requirement
