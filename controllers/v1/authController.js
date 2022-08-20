@@ -1,8 +1,8 @@
 require('dotenv').config()
-const { userModel } = require('../database/models/')
+const { userModel } = require('../../database/models')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { apiResponse, responseCodes } = require('../utility/commonUtility')
+const { apiResponse, responseCodes } = require('../../utility/commonUtility')
 
 const errorMessages = {
     'INVALID_EMAIL_PASSWORD': 'Incorrect email or password'

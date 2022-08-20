@@ -1,5 +1,5 @@
-const { postModel, userModel, commentModel, categoryModel } = require("../database/models");
-const { apiResponse, responseCodes } = require("../utility/commonUtility");
+const { postModel, userModel, commentModel, categoryModel } = require("../../database/models");
+const { apiResponse, responseCodes } = require("../../utility/commonUtility");
 
 exports.createPost = async (req, res) => {
   try {

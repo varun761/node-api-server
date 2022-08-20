@@ -2,10 +2,10 @@ const express = require('express')
 
 const { validate } = require('express-validation')
 
-const { createUser, listUsers, getUserDetails, deleteUser} = require('../controllers/userController')
-const { commonDetailsOrDelete } = require('../validations/commonValidation')
+const { createUser, listUsers, getUserDetails, deleteUser} = require('../../controllers/v1/userController')
+const { commonDetailsOrDelete } = require('../../validations/v1/commonValidation')
 
-const { createUserValidation } = require('../validations/userValidation')
+const { createUserValidation } = require('../../validations/v1/userValidation')
 
 const userRouter = express()
 

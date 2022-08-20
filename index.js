@@ -14,8 +14,7 @@ const connectToDB = require('./database')
 
 const app = express()
 
-const { userRouter , authRouter, postRouter, commentRouter } = require('./routes')
-const categoryRouter = require('./routes/categoryRouter')
+const { userRouter , authRouter, postRouter, commentRouter, categoryRouter } = require('./routes/v1/')
 
 app.get('/', (req, res) => {
 	res.send('API IS RUNNING')
@@ -25,15 +24,15 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
 app.use(bodyParser.json())
 
-app.use('/user', userRouter)
+app.use('/v1/user', userRouter)
 
-app.use('/auth', authRouter)
+app.use('/v1/auth', authRouter)
 
-app.use('/post', postRouter)
+app.use('/v1/post', postRouter)
 
-app.use('/comment', commentRouter)
+app.use('/v1/comment', commentRouter)
 
-app.use('/category', categoryRouter)
+app.use('/v1/category', categoryRouter)
 
 const port = process.env.APPLICATION_PORT || 5001
 

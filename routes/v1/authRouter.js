@@ -1,8 +1,8 @@
 const express = require('express')
 const { validate } = require('express-validation')
-const { loginValidation } = require('../validations/authValidation')
-const {login, refreshToken } = require('../controllers/authController')
-const verifyRefreshToken = require('../middleware/verifyRefreshToken')
+const { loginValidation } = require('../../validations/v1/authValidation')
+const {login, refreshToken } = require('../../controllers/v1/authController')
+const verifyRefreshToken = require('../../middleware/verifyRefreshToken')
 const authRouter = express()
 
 authRouter.post('/', validate(loginValidation), login)

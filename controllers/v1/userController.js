@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const { userModel } = require("../database/models/");
-const { apiResponse, responseCodes } = require("../utility/commonUtility");
+const { userModel } = require("../../database/models/");
+const { apiResponse, responseCodes } = require("../../utility/commonUtility");
 
 exports.createUser = async (req, res) => {
   try {
