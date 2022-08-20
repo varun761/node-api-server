@@ -4,7 +4,7 @@ const { createCategory } = require("../controllers/categoryController")
 const { updatePost } = require("../controllers/postController")
 const verifyUser = require("../middleware/verifyUser")
 const { createCategoryValidation } = require("../validations/categoryValidation")
-const { createPostValidation, updatePostValidation } = require("../validations/postValidation")
+const { updatePostValidation } = require("../validations/postValidation")
 const categoryRouter = express()
 
 categoryRouter.post('/', verifyUser, validate(createCategoryValidation), createCategory)
