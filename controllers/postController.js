@@ -1,4 +1,4 @@
-const { postModel, userModel, commentModel } = require("../database/models");
+const { postModel, userModel, commentModel, categoryModel } = require("../database/models");
 const { apiResponse, responseCodes } = require("../utility/commonUtility");
 
 exports.createPost = async (req, res) => {
@@ -86,6 +86,16 @@ const deleteSinglePost = (doc) => {
                   }
               }
           })
+          // update category
+          await categoryModel.findOneAndUpdate({
+            posts: {
+              $in: doc._id
+            }
+          }, {
+              $pull: {
+                posts: doc._id,
+              }
+          })
           resolve(true)
       } catch(e) {
           reject(e)
@@ -105,6 +115,45 @@ exports.deletePost = async (req, res) => {
   if (!postDoc) return apiResponse(res, responseCodes.NOT_FOUND, "Failed to deleted. No post found.")
     await deleteSinglePost(postDoc)
     return apiResponse(res, responseCodes.CREATED_OK, "Comment deleted successfully");
+  } catch(e) {
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
+  }
+}
+
+exports.updatePost = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { title, description, category_id } = req.body
+    await postModel.findOneAndUpdate({
+      _id: id,
+      author: req.authorized
+    }, {
+      $set: {
+        title,
+        description,
+        category_id
+      }
+    })
+    if (category_id) {
+      const alreadyExists = await categoryModel.findOne({
+        _id: category_id,
+        author: req.authorized,
+        posts: {
+          $nin: [id]
+        }
+      })
+      if (!alreadyExists) {
+        await categoryModel.findOneAndUpdate({
+          _id: category_id,
+          author: req.authorized,
+        }, {
+          $push: {
+            posts: id
+          }
+        })
+      }
+    }
+    return apiResponse(res, responseCodes.CREATED_OK, "Post updated successfully")
   } catch(e) {
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
