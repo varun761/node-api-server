@@ -1,7 +1,5 @@
 require('dotenv').config()
 
-const MONGODB_URL = process.env.MONGODB_URL || null
-
 const express = require('express')
 
 const { ValidationError } = require('express-validation')
@@ -12,9 +10,13 @@ const bodyParser = require('body-parser')
 
 const connectToDB = require('./database')
 
+const { userRouter , authRouter, postRouter, commentRouter, categoryRouter } = require('./routes/v1/')
+
 const app = express()
 
-const { userRouter , authRouter, postRouter, commentRouter, categoryRouter } = require('./routes/v1/')
+const MONGODB_URL = process.env.MONGODB_URL || null
+
+const port = process.env.APPLICATION_PORT || 5001
 
 app.get('/', (req, res) => {
 	res.send('API IS RUNNING')
@@ -33,8 +35,6 @@ app.use('/v1/post', postRouter)
 app.use('/v1/comment', commentRouter)
 
 app.use('/v1/category', categoryRouter)
-
-const port = process.env.APPLICATION_PORT || 5001
 
 app.use(function(err, req, res, next) {
     if (err instanceof ValidationError) {
