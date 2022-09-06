@@ -18,13 +18,14 @@ exports.createPost = async (req, res) => {
 
 exports.listPosts = async (req, res) => {
   try {
-    let { limit, skip } = req.params;
+    let { limit, skip } = req.query;
     if (!limit) {
       limit = 10;
     }
     if (!skip) {
       skip = 0;
     }
+    const total = await postModel.countDocuments({})
     const posts = await postModel
       .find(
         {},
@@ -34,7 +35,8 @@ exports.listPosts = async (req, res) => {
       .limit(limit)
       .skip(skip);
     return apiResponse(res, responseCodes.SUCCESS, null, {
-      posts
+      posts,
+      total
     })
   } catch (e) {
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
@@ -43,7 +45,7 @@ exports.listPosts = async (req, res) => {
 
 exports.listPostById = async (req, res) => {
   try {
-    let { limit, skip } = req.params;
+    let { limit, skip } = req.query;
     if (!limit) {
       limit = 10;
     }

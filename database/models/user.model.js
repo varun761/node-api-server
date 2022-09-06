@@ -52,16 +52,19 @@ userSchema.set("toJSON", { virtuals: true });
 userSchema
   .virtual("name")
   .get(function () {
-    return `${this.first_name} ${this.last_name}`.trim();
+    const last_name = this.last_name !== null && this.last_name !== 'null' ? this.last_name : ''
+    return `${this.first_name} ${last_name}`.trim();
   })
   .set(function (v) {
-    let first_name = v.substring(0, v.indexOf(" "));
-    if (first_name) {
-      first_name = first_name.charAt(0).toUpperCase() + first_name.slice(1);
-    }
-    let last_name = v.substring(v.indexOf(" ") + 1);
-    if (last_name) {
-      last_name = last_name.charAt(0).toUpperCase() + last_name.slice(1);
+    if (v.indexOf(" ") > -1) {
+      let first_name = v.substring(0, v.indexOf(" "));
+      if (first_name) {
+        first_name = first_name.charAt(0).toUpperCase() + first_name.slice(1);
+      }
+      let last_name = v.substring(v.indexOf(" ") + 1);
+      if (last_name) {
+        last_name = last_name.charAt(0).toUpperCase() + last_name.slice(1);
+      }
     }
     this.set({
       first_name,
