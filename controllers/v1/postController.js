@@ -1,3 +1,4 @@
+const { Types } = require("mongoose");
 const { postModel, userModel, commentModel, categoryModel } = require("../../database/models");
 const { apiResponse, responseCodes } = require("../../utility/commonUtility");
 
@@ -28,10 +29,13 @@ exports.listPosts = async (req, res) => {
     const total = await postModel.countDocuments({})
     const posts = await postModel
       .find(
-        {},
+        {
+          visibility: 'public'
+        },
       )
       .populate('author', 'first_name last_name dob')
       .populate('comments', 'comment created_at')
+      .sort({'created_at': -1})
       .limit(limit)
       .skip(skip);
     return apiResponse(res, responseCodes.SUCCESS, null, {
@@ -52,12 +56,15 @@ exports.listPostById = async (req, res) => {
     if (!skip) {
       skip = 0;
     }
+    const total = await postModel.countDocuments({ author: req.authorized})
     const posts = await postModel
-      .find({ author: req.authorized}, { title: 1, description: 1, created_at: 1, author: 1 })
+      .find({ author: req.authorized}, { title: 1, description: 1, created_at: 1, author: 1, visibility: 1 })
+      .sort({'created_at': -1})
       .limit(limit)
       .skip(skip);
     return apiResponse(res, responseCodes.SUCCESS, null, {
-      posts
+      posts,
+      total
     });
   } catch (e) {
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
@@ -156,6 +163,62 @@ exports.updatePost = async (req, res) => {
       }
     }
     return apiResponse(res, responseCodes.CREATED_OK, "Post updated successfully")
+  } catch(e) {
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
+  }
+}
+
+const getPostsCount = (query) => {
+  return new Promise(async () => {
+    try {
+      const allPostsCounts = await postModel.countDocuments(query)
+      resolve(allPostsCounts)
+    } catch(e) {
+      reject(e)
+    }
+  })
+}
+
+exports.getPostsStats = async (req, res) => {
+  try {
+    const [allPostsCount, allPrivatePosts, allPublicPosts] = await Promise.all([
+      getPostsCount({
+        author: req.authorized
+      }),
+      getPostsCount({
+        author: req.authorized,
+        visibility: 'private'
+      }),
+      getPostsCount({
+        author: req.authorized,
+        visibility: 'public'
+      })
+    ])
+    return apiResponse(res, responseCodes.SUCCESS, null, {
+      allPosts: allPostsCount,
+      allPrivatePosts,
+      allPublicPosts
+    })
+  } catch(e) {
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
+  }
+}
+
+exports.updateVisibilities = async (req, res) => {
+  try {
+    const { postId } = req.body
+    await postModel.updateMany({
+      _id: {
+        $in: postId.map((el) => Types.ObjectId(el))
+      }
+    }, {
+      $set: {
+        visibility: 'public'
+      }
+    }, {
+      upsert: true
+    })
+    return apiResponse(res, responseCodes.SUCCESS, 'Post visibility updated.')
   } catch(e) {
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
