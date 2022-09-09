@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 const connectToDB = async (url) => {
 	try {
 		await mongoose.connect(url, {
-            autoIndex: false,
             maxPoolSize: 10,
             serverSelectionTimeoutMS: 5000,
             socketTimeoutMS: 45000,
