@@ -52,8 +52,9 @@ userSchema.set("toJSON", { virtuals: true });
 userSchema
   .virtual("name")
   .get(function () {
+    const first_name = this.first_name
     const last_name = this.last_name !== null && this.last_name !== 'null' ? this.last_name : ''
-    return `${this.first_name} ${last_name}`.trim();
+    return `${first_name.charAt(0).toUpperCase() + first_name.slice(1)} ${last_name}`.trim();
   })
   .set(function (v) {
     if (v.indexOf(" ") > -1) {
