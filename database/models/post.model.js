@@ -15,6 +15,10 @@ const postSchema = new Schema(
       type: String,
       default: null,
     },
+    visibility: {
+      type: String,
+      default: 'private'
+    },
     author: {
       type: Types.ObjectId,
       ref: "User",
