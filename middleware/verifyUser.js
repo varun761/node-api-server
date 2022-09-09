@@ -1,8 +1,7 @@
 const { verify } = require("jsonwebtoken")
 const { userModel } = require("../database/models")
+const { apiResponse, responseCodes } = require("../utility/commonUtility");
 require('dotenv').config()
-
-const unauthResponseMessage = { message: 'Unauthorized'}
 
 module.exports = async (req, res, next) => {
     try {
