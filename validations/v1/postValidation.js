@@ -6,6 +6,12 @@ const ObjectIdValidations = (value, helper) => {
   }
 }
 
+const visibilityValidations = (value, helper) => {
+  if (['public', 'private'].indexOf(value) === -1) {
+    return helper.message('Visibility value can be public or private')
+  }
+}
+
 exports.createPostValidation = {
   body: Joi.object({
     title: Joi.string().required(),
@@ -26,3 +32,10 @@ exports.updatePostValidation = {
     catgeory_id: Joi.string().custom(ObjectIdValidations)
   }),
 };
+
+exports.updateVisibilityValidation = {
+  body: Joi.object({
+    postId: Joi.array().required(),
+    visibility: Joi.string().required().custom(visibilityValidations)
+  })
+}

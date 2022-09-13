@@ -36,13 +36,14 @@ exports.listPosts = async (req, res) => {
       .populate('author', 'first_name last_name dob')
       .populate('comments', 'comment created_at')
       .sort({'created_at': -1})
-      .limit(limit)
-      .skip(skip);
+      .skip(skip)
+      .limit(limit);
     return apiResponse(res, responseCodes.SUCCESS, null, {
       posts,
       total
     })
   } catch (e) {
+    console.log(e)
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
 };
@@ -206,14 +207,14 @@ exports.getPostsStats = async (req, res) => {
 
 exports.updateVisibilities = async (req, res) => {
   try {
-    const { postId } = req.body
+    const { postId, visibility } = req.body
     await postModel.updateMany({
       _id: {
         $in: postId.map((el) => Types.ObjectId(el))
       }
     }, {
       $set: {
-        visibility: 'public'
+        visibility
       }
     }, {
       upsert: true
