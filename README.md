@@ -17,6 +17,13 @@ JWT_REFRESH_SECRET=
 # Run the project
 To run the project
 1. Install the package by run the following command
-`npm i`
-2. Run this command after installing the packages
-`node index.js`
+`npm run install-dep`
+2. Run project in production mode
+`npm start`
+3. Run project in development mode
+`npm run start-dev`
+
+# Testing
+Run the command
+`npm run test`
+If you found any issue on test, please report in issue section.
