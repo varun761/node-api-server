@@ -10,6 +10,8 @@ const bodyParser = require('body-parser')
 
 const connectToDB = require('./database')
 
+const applicationMode = process.env.MODE
+
 const { userRouter , authRouter, postRouter, commentRouter, categoryRouter } = require('./routes/v1/')
 
 const app = express()
@@ -22,7 +24,8 @@ app.get('/', (req, res) => {
 	res.send('API IS RUNNING')
 })
 
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+if (applicationMode === 'production')
+  app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
 app.use(bodyParser.json())
 
@@ -43,9 +46,10 @@ app.use(function(err, req, res, next) {
     return res.status(500).json(err)
 })
 
-app.listen(port, async () => {
+module.exports = app.listen(port, async () => {
   if (MONGODB_URL) {
-	  await connectToDB(MONGODB_URL);
+	  await connectToDB(MONGODB_URL, applicationMode);
   }
-	console.log(`app is listening on port ${port}`)
+  if (applicationMode === 'development')
+    console.log(`app is listening on port ${port}`)
 })

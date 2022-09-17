@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const connectToDB = async (url) => {
+const connectToDB = async (url, mode) => {
 	try {
 		await mongoose.connect(url, {
             maxPoolSize: 10,
@@ -8,7 +8,8 @@ const connectToDB = async (url) => {
             socketTimeoutMS: 45000,
 			autoIndex: true
         })
-		console.log(`connected to db ${url}`)
+		if (mode === 'development' || mode === 'production')
+		  console.log(`connected to db ${url}`)
 	} catch(e) {
 		console.log(e)
 		process.exit(1)
