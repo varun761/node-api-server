@@ -11,13 +11,22 @@ const deleteLikePostTransaction = (like_id, post_id, author_id) => {
                   likes: like_id
                 }
             })
-            await postModel.findOneAndUpdate({
+            const linkedPost = await postModel.findOne({
                 _id: post_id
-            }, {
-                $pull: {
-                  likes: like_id
-                }
             })
+            if (linkedPost) {
+                linkedPost.likes.pull(like_id)
+                linkedPost.likes_count = linkedPost.likes_count - 1
+                await linkedPost.save()
+            }
+            // await postModel.findOneAndUpdate({
+                
+            // }, {
+            //     $pull: {
+            //       likes: like_id
+            //     }
+            // })
+
             // await postModel.findOneAndUpdate({
             //     _id: post_id
             // }, {

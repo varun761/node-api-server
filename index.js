@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 	res.send('API IS RUNNING')
 })
 
-if (applicationMode === 'production')
+if (applicationMode === 'production' || applicationMode === 'development')
   app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
 app.use(bodyParser.json())

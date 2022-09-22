@@ -1,6 +1,7 @@
 const { Types } = require("mongoose");
 const { postModel, userModel, commentModel, categoryModel } = require("../../database/models");
 const { apiResponse, responseCodes } = require("../../utility/commonUtility");
+const { getCacheValue, setCachevalue } = require("../../utility/redisUtility");
 
 exports.createPost = async (req, res) => {
   try {
@@ -19,29 +20,38 @@ exports.createPost = async (req, res) => {
 
 exports.listPosts = async (req, res) => {
   try {
-    let { limit, skip } = req.query;
-    if (!limit) {
-      limit = 10;
+    const cachedPosts = await getCacheValue('posts')
+    let responseObj = {}
+    if (cachedPosts) {
+      responseObj = JSON.parse(cachedPosts)
+    } else {
+      let { limit, skip } = req.query;
+      if (!limit) {
+        limit = 10;
+      }
+      if (!skip) {
+        skip = 0;
+      }
+      const total = await postModel.countDocuments({})
+      const posts = await postModel
+        .find(
+          {
+            visibility: 'public'
+          },
+        )
+        .populate('author', 'first_name last_name dob')
+        .populate('comments', 'comment created_at')
+        .select('author comments title description created_at likes_count')
+        .sort({'created_at': -1})
+        .skip(skip)
+        .limit(limit);
+      responseObj = {
+        posts,
+        total
+      }
+      setCachevalue('posts', JSON.stringify(responseObj))
     }
-    if (!skip) {
-      skip = 0;
-    }
-    const total = await postModel.countDocuments({})
-    const posts = await postModel
-      .find(
-        {
-          visibility: 'public'
-        },
-      )
-      .populate('author', 'first_name last_name dob')
-      .populate('comments', 'comment created_at')
-      .sort({'created_at': -1})
-      .skip(skip)
-      .limit(limit);
-    return apiResponse(res, responseCodes.SUCCESS, null, {
-      posts,
-      total
-    })
+    return apiResponse(res, responseCodes.SUCCESS, null, responseObj)
   } catch (e) {
     console.log(e)
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
@@ -50,23 +60,31 @@ exports.listPosts = async (req, res) => {
 
 exports.listPostById = async (req, res) => {
   try {
-    let { limit, skip } = req.query;
-    if (!limit) {
-      limit = 10;
+    const cachedUserPosts = await getCacheValue(`posts_${req.authorized}`)
+    let responseObj = {}
+    if (cachedUserPosts) {
+      responseObj = JSON.parse(cachedUserPosts)
+    } else {
+      let { limit, skip } = req.query;
+      if (!limit) {
+        limit = 10;
+      }
+      if (!skip) {
+        skip = 0;
+      }
+      const total = await postModel.countDocuments({ author: req.authorized})
+      const posts = await postModel
+        .find({ author: req.authorized}, { title: 1, description: 1, created_at: 1, author: 1, visibility: 1 })
+        .sort({'created_at': -1})
+        .limit(limit)
+        .skip(skip);
+      responseObj = {
+        posts,
+        total
+      }
+      setCachevalue(`posts_${req.authorized}`, JSON.stringify(responseObj))
     }
-    if (!skip) {
-      skip = 0;
-    }
-    const total = await postModel.countDocuments({ author: req.authorized})
-    const posts = await postModel
-      .find({ author: req.authorized}, { title: 1, description: 1, created_at: 1, author: 1, visibility: 1 })
-      .sort({'created_at': -1})
-      .limit(limit)
-      .skip(skip);
-    return apiResponse(res, responseCodes.SUCCESS, null, {
-      posts,
-      total
-    });
+    return apiResponse(res, responseCodes.SUCCESS, null, responseObj);
   } catch (e) {
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
