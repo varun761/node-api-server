@@ -32,6 +32,16 @@ const postSchema = new Schema(
     category: {
       type: Types.ObjectId,
       ref: "Category"
+    },
+    likes: [
+      {
+        type: Types.ObjectId,
+        ref: "Like"
+      }
+    ],
+    likes_count: {
+      type: Number,
+      default: 0
     }
   },
   {

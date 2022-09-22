@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, Types } = require("mongoose");
 const moment = require("moment");
 
 const userSchema = new Schema(
@@ -27,17 +27,21 @@ const userSchema = new Schema(
       required: true,
     },
     posts: [{
-      type: Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "Post"
     }],
     comments: [{
-      type: Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "Comment"
     }],
     categories: [{
-      type: Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "Category"
-    }]
+    }],
+    likes: [{
+      type: Types.ObjectId,
+      ref: "Like"
+    }],
   },
   {
     timestamps: {
