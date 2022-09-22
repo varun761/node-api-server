@@ -1,7 +1,7 @@
 const { Types } = require("mongoose");
 const { postModel, userModel, commentModel, categoryModel } = require("../../database/models");
 const { apiResponse, responseCodes } = require("../../utility/commonUtility");
-const { getCacheValue, setCachevalue } = require("../../utility/redisUtility");
+const { getCacheValue, setCachevalue, deleteCacheByPattern } = require("../../utility/redisUtility");
 
 exports.createPost = async (req, res) => {
   try {
@@ -12,6 +12,7 @@ exports.createPost = async (req, res) => {
       author: req.authorized,
     });
     await post.save();
+    await deleteCacheByPattern('posts*')
     return apiResponse(res, responseCodes.CREATED_OK, "Post created successfully");
   } catch (e) {
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
@@ -20,18 +21,19 @@ exports.createPost = async (req, res) => {
 
 exports.listPosts = async (req, res) => {
   try {
-    const cachedPosts = await getCacheValue('posts')
+    let { limit, skip } = req.query;
+    if (!limit) {
+      limit = 10;
+    }
+    if (!skip) {
+      skip = 0;
+    }
+    const cachedPosts = null
+    // await getCacheValue(`posts_${skip}_${limit}`)
     let responseObj = {}
     if (cachedPosts) {
       responseObj = JSON.parse(cachedPosts)
     } else {
-      let { limit, skip } = req.query;
-      if (!limit) {
-        limit = 10;
-      }
-      if (!skip) {
-        skip = 0;
-      }
       const total = await postModel.countDocuments({})
       const posts = await postModel
         .find(
@@ -49,7 +51,7 @@ exports.listPosts = async (req, res) => {
         posts,
         total
       }
-      setCachevalue('posts', JSON.stringify(responseObj))
+      setCachevalue(`posts_${skip}_${limit}`, JSON.stringify(responseObj))
     }
     return apiResponse(res, responseCodes.SUCCESS, null, responseObj)
   } catch (e) {
@@ -60,18 +62,18 @@ exports.listPosts = async (req, res) => {
 
 exports.listPostById = async (req, res) => {
   try {
-    const cachedUserPosts = await getCacheValue(`posts_${req.authorized}`)
+    let { limit, skip } = req.query;
+    if (!limit) {
+      limit = 10;
+    }
+    if (!skip) {
+      skip = 0;
+    }
+    const cachedUserPosts = await getCacheValue(`posts_${req.authorized}_${skip}_${limit}`)
     let responseObj = {}
     if (cachedUserPosts) {
       responseObj = JSON.parse(cachedUserPosts)
     } else {
-      let { limit, skip } = req.query;
-      if (!limit) {
-        limit = 10;
-      }
-      if (!skip) {
-        skip = 0;
-      }
       const total = await postModel.countDocuments({ author: req.authorized})
       const posts = await postModel
         .find({ author: req.authorized}, { title: 1, description: 1, created_at: 1, author: 1, visibility: 1 })
@@ -82,7 +84,7 @@ exports.listPostById = async (req, res) => {
         posts,
         total
       }
-      setCachevalue(`posts_${req.authorized}`, JSON.stringify(responseObj))
+      setCachevalue(`posts_${req.authorized}_${skip}_${limit}`, JSON.stringify(responseObj))
     }
     return apiResponse(res, responseCodes.SUCCESS, null, responseObj);
   } catch (e) {
@@ -237,6 +239,7 @@ exports.updateVisibilities = async (req, res) => {
     }, {
       upsert: true
     })
+    await deleteCacheByPattern('posts*')
     return apiResponse(res, responseCodes.SUCCESS, 'Post visibility updated.')
   } catch(e) {
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
