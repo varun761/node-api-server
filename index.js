@@ -18,7 +18,7 @@ const app = express()
 
 const MONGODB_URL = process.env.MONGODB_URL || null
 
-const port = process.env.APPLICATION_PORT || 5001
+const port = process.env.PORT || 8080
 
 app.get('/', (req, res) => {
 	res.send('API IS RUNNING')
