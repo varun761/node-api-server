@@ -6,12 +6,15 @@ Example of restfull API server with jwt authetication
 # Requirement
 Please define the following in the .env file
 ```sh
-APPLICATION_PORT=
+PORT=
 MONGODB_URL=
 JWT_ISSUER=
 JWT_CONSUMER=
 JWT_SECRET=
 JWT_REFRESH_SECRET=
+FRONTEND_URL=
+MODE=
+REDIS_URL=
 ```
 
 # Run the project
