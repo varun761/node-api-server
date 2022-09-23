@@ -1,6 +1,5 @@
 # REST API server
 [![CodeFactor](https://www.codefactor.io/repository/github/varun761/node-api-server/badge)](https://www.codefactor.io/repository/github/varun761/node-api-server)
-[![Heroku](https://heroku-badge.herokuapp.com/?app=blog-api-node-application)]
 
 Example of restfull API server with jwt authetication
 
