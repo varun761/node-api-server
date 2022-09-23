@@ -8,6 +8,8 @@ const morgan = require('morgan')
 
 const bodyParser = require('body-parser')
 
+const cors = require("cors")
+
 const connectToDB = require('./database')
 
 const applicationMode = process.env.MODE
@@ -19,6 +21,10 @@ const app = express()
 const MONGODB_URL = process.env.MONGODB_URL || null
 
 const port = process.env.PORT || 8080
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL
+}))
 
 app.get('/', (req, res) => {
 	res.send('API IS RUNNING')
