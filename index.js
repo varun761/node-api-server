@@ -2,6 +2,8 @@ require('dotenv').config()
 
 const express = require('express');
 
+const path = require('path')
+
 const { ValidationError } = require('express-validation')
 
 const morgan = require('morgan')
@@ -26,8 +28,16 @@ app.use(cors({
   origin: process.env.FRONTEND_URL
 }))
 
+app.set('view engine', 'pug')
+
+app.set('views', path.join(__dirname, 'views'))
+
 app.get('/', (req, res) => {
-	res.send('API IS RUNNING')
+  res.render('home', {
+    title: 'API Server',
+    message: 'Running'
+  })
+	// res.send('API IS RUNNING')
 })
 
 if (applicationMode === 'production' || applicationMode === 'development')

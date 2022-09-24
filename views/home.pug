@@ -1,0 +1,27 @@
+extends layout.pug
+block section
+    section
+        div.container-fluid
+            div.row.my-3
+                div.col
+                    h3 Status: #{message}
+            div.row
+                div.col
+                    table.table.details_table.bordered.table-primary
+                        thead
+                            tr
+                                th Services
+                                th Status
+                        tbody
+                            tr 
+                                td User 
+                                td
+                                    span.badge.bg-primary Running
+                            tr 
+                                td Posts 
+                                td
+                                    span.badge.bg-primary Running
+                            tr 
+                                td Likes 
+                                td
+                                    span.badge.bg-primary Running

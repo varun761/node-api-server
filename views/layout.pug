@@ -1,0 +1,22 @@
+html(lang="en")
+  head
+    title= title
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous")
+    block head
+  body
+    header.page-header
+        div.container-fluid
+            div.row.bg-light
+                div.col.px-3.py-3.text-center
+                    h1.mb-0 WeDevOop
+        nav.navbar.navbar-expand-lg.bg-light
+            div.container-fluid
+                button.navbar-toggler.menu-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation")
+                    span.navbar-toggler-icon
+                div#navbarNavAltMarkup.collapse.navbar-collapse
+                    div.navbar-nav.mx-auto
+                        a.nav-link.active(href="/") Home
+                        a.nav-link(href="/documentation") Documentation
+                        a.nav-link(href="/contact-us") Contact Us
+    block section
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous") 
