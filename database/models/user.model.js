@@ -61,12 +61,14 @@ userSchema
     return `${first_name.charAt(0).toUpperCase() + first_name.slice(1)} ${last_name}`.trim();
   })
   .set(function (v) {
+    let first_name = v
+    let last_name = null
     if (v.indexOf(" ") > -1) {
-      let first_name = v.substring(0, v.indexOf(" "));
+      first_name = v.substring(0, v.indexOf(" "));
       if (first_name) {
         first_name = first_name.charAt(0).toUpperCase() + first_name.slice(1);
       }
-      let last_name = v.substring(v.indexOf(" ") + 1);
+      last_name = v.substring(v.indexOf(" ") + 1);
       if (last_name) {
         last_name = last_name.charAt(0).toUpperCase() + last_name.slice(1);
       }
