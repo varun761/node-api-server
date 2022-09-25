@@ -1,27 +1,66 @@
-const app = require('../../index')
-const chai = require('chai')
-const chaiHttp = require('chai-http')
-const should = chai.should()
+const app = require('../../index');
+const chai = require('chai'),
+    should = chai.should(),
+    assert = chai.assert;
+const chaiHttp = require('chai-http');
+const { faker } = require("@faker-js/faker");
+const { userModel } = require('../../database/models');
 
 chai.use(chaiHttp)
 
-describe('GET /v1/post/', () => {
-    it('should return all the posts', (done) => {
+var containsFullName = {
+    name: faker.name.fullName(),
+    email: faker.internet.email(),
+    dob: '1992=01-01',
+    password: faker.internet.password()
+}
+
+var onlyFirstNameCredentials = {
+    name: faker.name.firstName(),
+    email: faker.internet.email(),
+    dob: '1992=01-01',
+    password: faker.internet.password()
+}
+
+describe('POST /v1/user/', () => {
+
+    after (function (done) {
+        // user collection cleanup
+        userModel.deleteMany({
+            email: {
+                $in: [ containsFullName.email, onlyFirstNameCredentials.email]
+            }
+        }).catch((e) => {
+            console.log(e)
+        })
+        .finally(() => done())
+    });
+
+    it('containsFullName: should return 201 response with message', (done) => {
         chai
         .request(app)
-        .get('/v1/post/')
+        .post('/v1/user/')
+        .send(containsFullName)
         .end((err, response) => {
-            response.should.have.status(200)
-            response.body.should.have.keys('posts', 'total')
-            response.body.posts.should.be.a('array')
-            response.body.total.should.be.a('number')
+            response.should.have.status(201)
+            response.body.should.have.keys('message')
+            response.body.message.should.be.a('string')
+            assert.equal(response.body.message, 'User created successfully')
             done()
         })
     })
-})
 
-describe('POST /v1/post/', () => {
-    it('should posts data to api and return 201 response', (done) => {
-        done()
+    it('onlyFirstNameCredentials: should return 201 response with message', (done) => {
+        chai
+        .request(app)
+        .post('/v1/user/')
+        .send(onlyFirstNameCredentials)
+        .end((err, response) => {
+            response.should.have.status(201)
+            response.body.should.have.keys('message')
+            response.body.message.should.be.a('string')
+            assert.equal(response.body.message, 'User created successfully')
+            done()
+        })
     })
 })
