@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const { userModel } = require("../../database/models/");
 const { apiResponse, responseCodes } = require("../../utility/commonUtility");
+const ErrorHandler = require("../../utility/errorHandler");
+
+const errorCatcher = new ErrorHandler()
 
 exports.createUser = async (req, res) => {
   try {
@@ -17,6 +20,7 @@ exports.createUser = async (req, res) => {
     await user.save();
     return apiResponse(res, responseCodes.CREATED_OK, "User created successfully");
   } catch (e) {
+    errorCatcher.writeError(req, e)
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
   }
 };
