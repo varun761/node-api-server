@@ -17,8 +17,8 @@ exports.createPostValidation = {
     title: Joi.string().required(),
     description: Joi.string(),
     visibility: Joi.string().required(),
-    cover_image: Joi.string(),
-    catgeory_id: Joi.string().custom(ObjectIdValidations)
+    cover_image: Joi.string().allow(null),
+    // catgeory_id: Joi.string().custom(ObjectIdValidations)
   }),
 };
 
