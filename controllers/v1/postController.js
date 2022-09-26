@@ -5,10 +5,12 @@ const { getCacheValue, setCachevalue, deleteCacheByPattern } = require("../../ut
 
 exports.createPost = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, visibility, cover_image } = req.body;
     const post = new postModel({
       title,
       description,
+      visibility,
+      cover_image,
       author: req.authorized,
     });
     await post.save();
