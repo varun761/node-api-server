@@ -32,12 +32,15 @@ exports.listPosts = async (req, res) => {
     }
     const cachedPosts = null
     // await getCacheValue(`posts_${skip}_${limit}`)
-    let responseObj = {}
+    let responseObj = {
+      posts: [],
+      total: 0
+    }
     if (cachedPosts) {
       responseObj = JSON.parse(cachedPosts)
     } else {
-      const total = await postModel.countDocuments({})
-      const posts = await postModel
+      responseObj.total = await postModel.countDocuments({})
+      responseObj.posts = await postModel
         .find(
           {
             visibility: 'public'
@@ -49,10 +52,6 @@ exports.listPosts = async (req, res) => {
         .sort({'created_at': -1})
         .skip(skip)
         .limit(limit);
-      responseObj = {
-        posts,
-        total
-      }
       setCachevalue(`posts_${skip}_${limit}`, JSON.stringify(responseObj))
     }
     return apiResponse(res, responseCodes.SUCCESS, null, responseObj)
@@ -68,9 +67,11 @@ exports.postDetails = async (req, res) => {
     const responseObj = {
       post: null
     }
-    responseObject.post = await postModel.findOne({
+    responseObj.post = await postModel.findOne({
       _id: id
     })
+    .populate('author', 'first_name last_name dob')
+    .populate('comments')
     return apiResponse(res, responseCodes.SUCCESS, null, responseObj);
   } catch(e) {
     console.log(e)
@@ -88,20 +89,19 @@ exports.listPostById = async (req, res) => {
       skip = 0;
     }
     const cachedUserPosts = await getCacheValue(`posts_${req.authorized}_${skip}_${limit}`)
-    let responseObj = {}
+    let responseObj = {
+      total: 0,
+      posts: []
+    }
     if (cachedUserPosts) {
       responseObj = JSON.parse(cachedUserPosts)
     } else {
-      const total = await postModel.countDocuments({ author: req.authorized})
-      const posts = await postModel
+      responseObj.total = await postModel.countDocuments({ author: req.authorized})
+      responseObj.posts = await postModel
         .find({ author: req.authorized}, { title: 1, description: 1, created_at: 1, author: 1, visibility: 1 })
         .sort({'created_at': -1})
         .limit(limit)
         .skip(skip);
-      responseObj = {
-        posts,
-        total
-      }
       setCachevalue(`posts_${req.authorized}_${skip}_${limit}`, JSON.stringify(responseObj))
     }
     return apiResponse(res, responseCodes.SUCCESS, null, responseObj);
