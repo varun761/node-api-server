@@ -63,12 +63,12 @@ exports.listPosts = async (req, res) => {
 exports.postDetails = async (req, res) => {
   try {
     const { id } = req.params
-    const responseObj = {
+    let responseObj = {
       post: null
     }
     const cachedPost = await getCacheValue(`post_${id}`)
     if (cachedPost) {
-      responseObj.post = JSON.parse(cachedPost)
+      responseObj = JSON.parse(cachedPost)
     } else {
       responseObj.post = await postModel.findOne({
         _id: id
