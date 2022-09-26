@@ -30,8 +30,7 @@ exports.listPosts = async (req, res) => {
     if (!skip) {
       skip = 0;
     }
-    const cachedPosts = null
-    // await getCacheValue(`posts_${skip}_${limit}`)
+    const cachedPosts = await getCacheValue(`posts_${skip}_${limit}`)
     let responseObj = {
       posts: [],
       total: 0
@@ -67,11 +66,17 @@ exports.postDetails = async (req, res) => {
     const responseObj = {
       post: null
     }
-    responseObj.post = await postModel.findOne({
-      _id: id
-    })
-    .populate('author', 'first_name last_name dob')
-    .populate('comments')
+    const cachedPost = await getCacheValue(`post_${id}`)
+    if (cachedPost) {
+      responseObj.post = JSON.parse(cachedPost)
+    } else {
+      responseObj.post = await postModel.findOne({
+        _id: id
+      })
+      .populate('author', 'first_name last_name dob')
+      .populate('comments')
+      setCachevalue(`post_${id}`, JSON.stringify(responseObj))
+    }
     return apiResponse(res, responseCodes.SUCCESS, null, responseObj);
   } catch(e) {
     console.log(e)
