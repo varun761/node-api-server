@@ -40,3 +40,9 @@ exports.updateVisibilityValidation = {
     visibility: Joi.string().required().custom(visibilityValidations)
   })
 }
+
+exports.detailsPostValidation = {
+  params: Joi.object({
+    id: Joi.string().required().custom(ObjectIdValidations)
+  })
+}

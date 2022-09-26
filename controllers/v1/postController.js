@@ -62,6 +62,22 @@ exports.listPosts = async (req, res) => {
   }
 };
 
+exports.postDetails = async (req, res) => {
+  try {
+    const { id } = req.params
+    const responseObj = {
+      post: null
+    }
+    responseObject.post = await postModel.findOne({
+      _id: id
+    })
+    return apiResponse(res, responseCodes.SUCCESS, null, responseObj);
+  } catch(e) {
+    console.log(e)
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)    
+  }
+}
+
 exports.listPostById = async (req, res) => {
   try {
     let { limit, skip } = req.query;
