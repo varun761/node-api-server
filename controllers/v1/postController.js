@@ -64,7 +64,8 @@ exports.postDetails = async (req, res) => {
   try {
     const { id } = req.params
     let responseObj = {
-      post: null
+      post: null,
+      recent_posts: []
     }
     const cachedPost = await getCacheValue(`post_${id}`)
     if (cachedPost) {
@@ -75,6 +76,14 @@ exports.postDetails = async (req, res) => {
       })
       .populate('author', 'first_name last_name dob')
       .populate('comments')
+      if (responseObj.post) {
+        responseObj.recent_posts = await postModel
+          .find({ author: responseObj.post.author._id, visibility: 'public', _id: {$nin: [id]} }, { title: 1, description: 1, created_at: 1, author: 1, visibility: 1 })
+          .populate('author', 'first_name last_name dob')
+          .sort({'created_at': -1})
+          .limit(5)
+          .skip(0);
+      }
       setCachevalue(`post_${id}`, JSON.stringify(responseObj))
     }
     return apiResponse(res, responseCodes.SUCCESS, null, responseObj);

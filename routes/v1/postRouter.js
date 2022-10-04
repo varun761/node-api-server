@@ -9,8 +9,9 @@ const postRouter = express()
 
 postRouter.post('/', verifyUser, validate(createPostValidation), createPost)
 .get('/', listPosts)
-.get('/:id', validate(detailsPostValidation), postDetails)
 .delete('/:id', verifyUser, validate(commonDetailsOrDelete), deletePost)
+
+postRouter.get('/single/:id', validate(detailsPostValidation), postDetails)
 
 postRouter.get('/by-author', verifyUser, listPostById)
 

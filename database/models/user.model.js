@@ -42,6 +42,14 @@ const userSchema = new Schema(
       type: Types.ObjectId,
       ref: "Like"
     }],
+    followers: [{
+      type: Types.ObjectId,
+      ref: "User"
+    }],
+    about_me: {
+      type: String,
+      default: null
+    }
   },
   {
     timestamps: {
