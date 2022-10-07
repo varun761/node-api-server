@@ -45,7 +45,7 @@ exports.listPosts = async (req, res) => {
             visibility: 'public'
           },
         )
-        .populate('author', 'first_name last_name dob')
+        .populate('author', 'first_name last_name')
         .populate('comments', 'comment created_at')
         .select('author comments title description created_at likes_count')
         .sort({'created_at': -1})
