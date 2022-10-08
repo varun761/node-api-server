@@ -2,9 +2,9 @@ extends layout.pug
 block section
     section
         div.container
-            div.row.my-3
+            div.row.my-3.py-3
                 div.col
-                    h3 Status: #{message}
+                    h3 Blog Api Status: #{message}
             div.row
                 div.col
                     table.table.details_table.bordered.table-primary
@@ -25,3 +25,11 @@ block section
                                 td Likes 
                                 td
                                     span.badge.bg-primary Running
+                            tr 
+                                td Comments 
+                                td
+                                    span.badge.bg-primary Running
+                            tr 
+                                td Chat 
+                                td
+                                    span.badge.bg-secondary In-progress
