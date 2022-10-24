@@ -9,13 +9,16 @@ html(lang="en")
     link(href='https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap' rel='stylesheet')
 
     style.
-        body { font-family: 'Poppins', sans-serif; }
+        body { font-family: 'Poppins', sans-serif; font-weight: 100;}
         .bi-telephone, .bi-envelope { margin-right: 10px; }
         footer ul li {
             font-size: 18px;
             margin-bottom: 10px;
         }
-        .footer-item a { color: #fff; text-decoration: none;}
+        .footer-content p {
+            line-height: 30px;
+        }
+        .footer-content a { color: #fff; text-decoration: none;}
         .footer-item .title, footer h5 { font-size: 20px; font-weight: 800; margin-bottom: 15px;}
     block head
   body
@@ -38,11 +41,11 @@ html(lang="en")
         div.footer-content.pt-5.pb-4.mt-3.bg-dark.text-white
             div.container-fluid
                 div.row
-                    div.col.mx-auto.text-center
+                    div.col
                         div.footer-item
                             h5 WeDevOops
                         div.footer-text.mb-4
-                            p.mb-0 We develop large scale and high traffic web application
+                            p.mb-0 We are a digital service provider company which helps clients in building web as well as mobile applications. We follow each and every industrial standard, So the application can run smoothly over multiple platforms.
                         div.footer-item
                             h6.title Contact Us
                             ul.nav-list.list-unstyled
@@ -56,6 +59,24 @@ html(lang="en")
                                         svg.bi.bi-envelope(xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='#fff' viewbox='0 0 16 16')
                                             path(d='M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z')
                                         span sharma.varun76@yahoo.in
+                    .col
+                        .footer-item
+                            h5 Quick Links
+                        .footer-text.mb-4
+                            ul.nav-list.list-unstyled
+                                li.nav-item
+                                    a(href="/about-us") About Us
+                                li.nav-item
+                                    a(href="/services") Services
+                                li.nav-item
+                                    a(href="/our-team") Our Team
+                                li.nav-item
+                                    a(href="/our-team") Contact Us
+                    .col
+                        .footer-item
+                            h5 Instagram
+                        .footer-text.mb-4
+                            p No Instagram Posts
         .bottom-bar.d-block.w-100.bg-dark.text-white.pb-3
             div.row.text-center
                 div.col
