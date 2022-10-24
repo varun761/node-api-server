@@ -1,71 +1,90 @@
-require('dotenv').config()
+require('dotenv').config();
 
 const express = require('express');
 
-const path = require('path')
+const path = require('path');
 
-const { ValidationError } = require('express-validation')
+const { ValidationError } = require('express-validation');
 
-const morgan = require('morgan')
+const morgan = require('morgan');
 
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 
-const cors = require("cors")
+const cors = require('cors');
 
-const connectToDB = require('./database')
+const swaggerUi = require('swagger-ui-express');
 
-const applicationMode = process.env.MODE
+const swaggerJsdoc = require('swagger-jsdoc');
 
-const { userRouter , authRouter, postRouter, commentRouter, categoryRouter } = require('./routes/v1/')
+const swaggerOption = require('./swagger-config.json');
 
-const app = express()
+const connectToDB = require('./database');
 
-const MONGODB_URL = process.env.MONGODB_URL || null
+const applicationMode = process.env.MODE;
 
-const port = process.env.PORT || 8080
+const {
+  userRoute,
+  authRoute,
+  postRoute,
+  commentRoute,
+  categoryRoute,
+} = require('./routes/v1/');
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL
-}))
+const app = express();
 
-app.set('view engine', 'pug')
+const MONGODB_URL = process.env.MONGODB_URL || null;
 
-app.set('views', path.join(__dirname, 'views'))
+const port = process.env.PORT || 8080;
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+  })
+);
+
+app.set('view engine', 'pug');
+
+app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
   res.render('home', {
     title: 'API Server',
-    message: 'Running'
-  })
-	// res.send('API IS RUNNING')
-})
+    message: 'Running',
+  });
+});
 
 if (applicationMode === 'production' || applicationMode === 'development')
-  app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+  app.use(
+    morgan(':method :url :status :res[content-length] - :response-time ms')
+  );
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-app.use('/v1/user', userRouter)
+app.use('/v1/user', userRoute);
 
-app.use('/v1/auth', authRouter)
+app.use('/v1/auth', authRoute);
 
-app.use('/v1/post', postRouter)
+app.use('/v1/post', postRoute);
 
-app.use('/v1/comment', commentRouter)
+app.use('/v1/comment', commentRoute);
 
-app.use('/v1/category', categoryRouter)
+app.use('/v1/category', categoryRoute);
 
-app.use(function(err, req, res, next) {
-    if (err instanceof ValidationError) {
-      return res.status(err.statusCode).json(err)
-    }
-    return res.status(500).json(err)
-})
+const openapiSpecification = swaggerJsdoc(swaggerOption);
+
+app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
+
+app.use(function (err, req, res, next) {
+  if (err instanceof ValidationError) {
+    return res.status(err.statusCode).json(err);
+  }
+  return res.status(500).json(err);
+});
 
 module.exports = app.listen(port, async () => {
   if (MONGODB_URL) {
-	  await connectToDB(MONGODB_URL, applicationMode);
+    await connectToDB(MONGODB_URL, applicationMode);
   }
   if (applicationMode === 'development')
-    console.log(`app is listening on port ${port}`)
-})
+    console.log(`app is listening on port ${port}`);
+});

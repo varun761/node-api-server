@@ -1,6 +1,6 @@
 const { verify } = require("jsonwebtoken")
 const { userModel } = require("../database/models")
-const { apiResponse, responseCodes } = require("../utility/commonUtility");
+const { apiResponse, responseCodes } = require("../utility/common.utility");
 require('dotenv').config()
 
 module.exports = async (req, res, next) => {

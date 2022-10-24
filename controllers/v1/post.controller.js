@@ -1,7 +1,7 @@
 const { Types } = require("mongoose");
 const { postModel, userModel, commentModel, categoryModel } = require("../../database/models");
-const { apiResponse, responseCodes } = require("../../utility/commonUtility");
-const { getCacheValue, setCachevalue, deleteCacheByPattern } = require("../../utility/redisUtility");
+const { apiResponse, responseCodes } = require("../../utility/common.utility");
+const { getCacheValue, setCachevalue, deleteCacheByPattern } = require("../../utility/redis.utility");
 
 exports.createPost = async (req, res) => {
   try {

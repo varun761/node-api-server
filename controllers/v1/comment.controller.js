@@ -1,6 +1,6 @@
 const { Types } = require("mongoose");
 const { postModel, commentModel, userModel } = require("../../database/models");
-const { apiResponse, responseCodes } = require("../../utility/commonUtility");
+const { apiResponse, responseCodes } = require("../../utility/common.utility");
 
 exports.createComment = async (req, res) => {
     try {

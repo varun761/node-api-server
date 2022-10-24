@@ -1,5 +1,5 @@
 const { likeModel, userModel, postModel } = require("../../database/models")
-const { responseCodes, apiResponse } = require("../../utility/commonUtility")
+const { responseCodes, apiResponse } = require("../../utility/common.utility");
 
 const deleteLikePostTransaction = (like_id, post_id, author_id) => {
     return new Promise(async (resolve, reject) => {

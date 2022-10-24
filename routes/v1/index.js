@@ -1,17 +1,17 @@
-const userRouter = require('./userRouter')
+const userRoute = require('./user.route')
 
-const authRouter = require('./authRouter')
+const authRoute = require('./auth.route')
 
-const postRouter = require('./postRouter')
+const postRoute = require('./post.route')
 
-const commentRouter = require('./commentRouter')
+const commentRoute = require('./comment.route')
 
-const categoryRouter = require('./categoryRouter')
+const categoryRoute = require('./category.route')
 
 module.exports = {
-    userRouter,
-    authRouter,
-    postRouter,
-    commentRouter,
-    categoryRouter
+    userRoute,
+    authRoute,
+    postRoute,
+    commentRoute,
+    categoryRoute
 }

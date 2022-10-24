@@ -1,5 +1,5 @@
 const { categoryModel } = require("../../database/models")
-const { apiResponse, responseCodes } = require("../../utility/commonUtility")
+const { apiResponse, responseCodes } = require("../../utility/common.utility")
 
 exports.createCategory = async (req, res) => {
     try {

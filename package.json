@@ -25,12 +25,17 @@
     "morgan": "^1.10.0",
     "pug": "^3.0.2",
     "redis": "^4.3.1",
-    "socket.io": "^4.5.1"
+    "socket.io": "^4.5.1",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.5.0",
     "chai": "^4.3.6",
     "chai-http": "^4.3.0",
+    "eslint": "^8.26.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
     "mocha": "^10.0.0"
   },
   "mocha": {

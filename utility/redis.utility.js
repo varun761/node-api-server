@@ -6,14 +6,18 @@ let client;
 
 (async () => {
     client = createClient({
-        url: process.env.REDIS_URL
+        url: process.env.REDIS_URL,
+        socket: {
+            keepAlive: 1000,
+            reconnectStrategy: (retries) => Math.min(retries * 50, 500)
+        }
     })
 
     client.on('connect', () => console.info('REDIS CONNECTED'))
 
     client.on('error', (err) => {
         console.error('--REDIS--ERROR ', err)
-        process.exit(1)
+        // process.exit(1)
     })
 
     await client.connect()

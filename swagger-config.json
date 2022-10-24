@@ -1,0 +1,48 @@
+{
+  "failOnErrors": true,
+  "definition": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Blog API",
+      "version": "0.0.1"
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
+      "responses": {
+        "UnauthorizedError": {
+          "description": "Return a JSON object containing message",
+          "content": {
+            "application/json": {
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+          }
+        }
+      }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3001/{version}",
+        "description": "local",
+        "variables": {
+          "version": {
+            "default": "v1"
+          }
+        }
+      }
+    ]
+  },
+  "apis": ["./routes/v1/*.routes.js"]
+}

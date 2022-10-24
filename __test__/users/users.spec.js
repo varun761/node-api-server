@@ -11,14 +11,14 @@ chai.use(chaiHttp)
 var containsFullName = {
     name: faker.name.fullName(),
     email: faker.internet.email(),
-    dob: '1992=01-01',
+    dob: '1992-01-01',
     password: faker.internet.password()
 }
 
 var onlyFirstNameCredentials = {
     name: faker.name.firstName(),
     email: faker.internet.email(),
-    dob: '1992=01-01',
+    dob: '1992-01-01',
     password: faker.internet.password()
 }
 

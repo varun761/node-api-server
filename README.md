@@ -6,6 +6,7 @@ Example of restfull API server with jwt authetication
 # Documentation
 https://documenter.getpostman.com/view/22859786/2s83S59s5g
 
+
 # Requirement
 Please define the following in the .env file
 ```sh
