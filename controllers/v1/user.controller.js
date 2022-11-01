@@ -1,14 +1,16 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const { userModel } = require("../../database/models");
-const { apiResponse, responseCodes } = require("../../utility/common.utility");
-const ErrorHandler = require("../../utility/errorHandler.utility");
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const { userModel } = require('../../database/models');
+const { apiResponse, responseCodes } = require('../../utility/common.utility');
+const ErrorHandler = require('../../utility/errorHandler.utility');
 
-const errorCatcher = new ErrorHandler()
+const errorCatcher = new ErrorHandler();
 
 exports.createUser = async (req, res) => {
   try {
-    const { name, email, password, dob } = req.body;
+    const {
+      name, email, password, dob,
+    } = req.body;
     const salt = await bcrypt.genSaltSync(10);
     const bcryptPassword = await bcrypt.hashSync(password, salt);
     const user = new userModel({
@@ -18,10 +20,10 @@ exports.createUser = async (req, res) => {
       password: bcryptPassword,
     });
     await user.save();
-    return apiResponse(res, responseCodes.CREATED_OK, "User created successfully");
+    return apiResponse(res, responseCodes.CREATED_OK, 'User created successfully');
   } catch (e) {
-    errorCatcher.writeError(req, e)
-    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
+    errorCatcher.writeError(req, e);
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message);
   }
 };
 
@@ -43,15 +45,15 @@ exports.listUsers = async (req, res) => {
           email: 1,
           dob: 1,
           createdAt: 1,
-        }
+        },
       )
       .limit(limit)
       .skip(skip);
     return apiResponse(res, responseCodes.SUCCESS, {
-      users: usersListing
+      users: usersListing,
     });
   } catch (e) {
-    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message);
   }
 };
 
@@ -61,9 +63,9 @@ exports.deleteUser = async (req, res) => {
     await userModel.findOneAndDelete({
       _id: mongoose.Types.ObjectId(id),
     });
-    return apiResponse(res, responseCodes.SUCCESS, "User deleted successfully");
+    return apiResponse(res, responseCodes.SUCCESS, 'User deleted successfully');
   } catch (e) {
-    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message);
   }
 };
 
@@ -79,15 +81,15 @@ exports.getUserDetails = async (req, res) => {
         last_name: 1,
         dob: 1,
         email: 1,
-      }
+      },
     );
     if (!userDetails) {
-      return apiResponse(res, responseCodes.METHOD_NOT_ALLOWED, "No user exists.");
+      return apiResponse(res, responseCodes.METHOD_NOT_ALLOWED, 'No user exists.');
     }
     return apiResponse(res, responseCodes.SUCCESS, null, {
-      user: userDetails
+      user: userDetails,
     });
   } catch (e) {
-    return apiResponse(res, responseCodes.SERVER_ERROR, e.message)
+    return apiResponse(res, responseCodes.SERVER_ERROR, e.message);
   }
 };

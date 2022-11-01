@@ -1,9 +1,10 @@
-const express = require('express')
-const { validate } = require('express-validation')
-const { loginValidation } = require('../../validations/v1/authValidation')
-const {login, refreshToken } = require('../../controllers/v1/auth.controller')
-const verifyRefreshToken = require('../../middleware/verifyRefreshToken')
-const authRoute = express()
+const express = require('express');
+const { validate } = require('express-validation');
+const { loginValidation } = require('../../validations/v1/authValidation');
+const { login, refreshToken } = require('../../controllers/v1/auth.controller');
+const verifyRefreshToken = require('../../middleware/verifyRefreshToken');
+
+const authRoute = express();
 /**
  * @openapi
  * /auth/:
@@ -45,7 +46,7 @@ const authRoute = express()
  *       401:
  *         $ref: "#/components/responses/UnauthorizedError"
  */
-authRoute.post('/', validate(loginValidation), login)
+authRoute.post('/', validate(loginValidation), login);
 
 /**
  * @openapi
@@ -73,6 +74,6 @@ authRoute.post('/', validate(loginValidation), login)
  *       401:
  *         $ref: "#/components/responses/UnauthorizedError"
  */
-authRoute.post('/refresh-token', verifyRefreshToken, refreshToken)
+authRoute.post('/refresh-token', verifyRefreshToken, refreshToken);
 
-module.exports = authRoute
+module.exports = authRoute;

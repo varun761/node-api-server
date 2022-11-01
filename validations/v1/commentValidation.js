@@ -1,5 +1,5 @@
-const { Joi } = require("express-validation");
-const mongoose = require("mongoose")
+const { Joi } = require('express-validation');
+const mongoose = require('mongoose');
 
 exports.createCommentValidation = {
   params: Joi.object({
@@ -12,6 +12,6 @@ exports.createCommentValidation = {
       }),
   }),
   body: Joi.object({
-    comment: Joi.string().required().min(1)
-  })
+    comment: Joi.string().required().min(1),
+  }),
 };

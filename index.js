@@ -28,7 +28,7 @@ const {
   postRoute,
   commentRoute,
   categoryRoute,
-} = require('./routes/v1/');
+} = require('./routes/v1');
 
 const app = express();
 
@@ -39,7 +39,7 @@ const port = process.env.PORT || 8080;
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
-  })
+  }),
 );
 
 app.set('view engine', 'pug');
@@ -53,10 +53,11 @@ app.get('/', (req, res) => {
   });
 });
 
-if (applicationMode === 'production' || applicationMode === 'development')
+if (applicationMode === 'production' || applicationMode === 'development') {
   app.use(
-    morgan(':method :url :status :res[content-length] - :response-time ms')
+    morgan(':method :url :status :res[content-length] - :response-time ms'),
   );
+}
 
 app.use(bodyParser.json());
 
@@ -74,7 +75,7 @@ const openapiSpecification = swaggerJsdoc(swaggerOption);
 
 app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 
-app.use(function (err, req, res, next) {
+app.use((err, req, res) => {
   if (err instanceof ValidationError) {
     return res.status(err.statusCode).json(err);
   }
@@ -85,6 +86,5 @@ module.exports = app.listen(port, async () => {
   if (MONGODB_URL) {
     await connectToDB(MONGODB_URL, applicationMode);
   }
-  if (applicationMode === 'development')
-    console.log(`app is listening on port ${port}`);
+  if (applicationMode === 'development') console.log(`app is listening on port ${port}`);
 });

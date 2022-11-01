@@ -1,5 +1,5 @@
-const { Schema, model, Types } = require("mongoose");
-const userModel = require("./user.model");
+const { Schema, model, Types } = require('mongoose');
+const userModel = require('./user.model');
 
 const postSchema = new Schema(
   {
@@ -17,56 +17,56 @@ const postSchema = new Schema(
     },
     visibility: {
       type: String,
-      default: 'private'
+      default: 'private',
     },
     author: {
       type: Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
     comments: [
       {
         type: Types.ObjectId,
-        ref: "Comment"
-      }
+        ref: 'Comment',
+      },
     ],
     category: {
       type: Types.ObjectId,
-      ref: "Category"
+      ref: 'Category',
     },
     likes: [
       {
         type: Types.ObjectId,
-        ref: "Like"
-      }
+        ref: 'Like',
+      },
     ],
     likes_count: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   {
     timestamps: {
-      createdAt: "created_at",
+      createdAt: 'created_at',
     },
-  }
+  },
 );
 
-postSchema.post("save", async function (doc) {
+postSchema.post('save', async (doc) => {
   try {
     // remove comments from user
     await userModel.findOneAndUpdate({
       _id: doc.author,
-      posts: { $nin: [doc._id] }
+      posts: { $nin: [doc._id] },
     }, {
       $push: {
-        posts: doc._id
-      }
-    })
-  } catch(e) {
-    throw new Error(e.message)
+        posts: doc._id,
+      },
+    });
+  } catch (e) {
+    throw new Error(e.message);
   }
-})
+});
 
-const postModel = new model("Post", postSchema);
+const postModel = new model('Post', postSchema);
 
 module.exports = postModel;

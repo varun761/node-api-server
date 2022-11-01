@@ -1,6 +1,6 @@
-const { Schema, model } = require("mongoose");
-const postModel = require("./post.model");
-const userModel = require("./user.model");
+const { Schema, model } = require('mongoose');
+const postModel = require('./post.model');
+const userModel = require('./user.model');
 
 const commentSchema = new Schema(
   {
@@ -9,47 +9,47 @@ const commentSchema = new Schema(
       required: true,
     },
     post: {
-        type: Schema.Types.ObjectId,
-        ref: "Post",
-        required: true,
+      type: Schema.Types.ObjectId,
+      ref: 'Post',
+      required: true,
     },
     author: {
       type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true
+      ref: 'User',
+      required: true,
     },
   },
   {
     timestamps: {
-      createdAt: "created_at",
+      createdAt: 'created_at',
     },
-  }
+  },
 );
 
-commentSchema.post("save", async function (doc) {
+commentSchema.post('save', async (doc) => {
   try {
     await postModel.findOneAndUpdate({
       _id: doc.post,
-      comments: { $nin: [doc._id] }
+      comments: { $nin: [doc._id] },
     }, {
       $push: {
-        comments: doc._id
-      }
-    })
+        comments: doc._id,
+      },
+    });
     // remove comments from user
     await userModel.findOneAndUpdate({
       _id: doc.author,
-      comments: { $nin: [doc._id] }
+      comments: { $nin: [doc._id] },
     }, {
       $push: {
-        comments: doc._id
-      }
-    })
-  } catch(e) {
-    throw new Error(e.message)
+        comments: doc._id,
+      },
+    });
+  } catch (e) {
+    throw new Error(e.message);
   }
-})
+});
 
-const commentModel = new model("Comment", commentSchema);
+const commentModel = new model('Comment', commentSchema);
 
 module.exports = commentModel;

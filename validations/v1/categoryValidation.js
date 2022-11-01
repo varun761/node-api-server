@@ -1,4 +1,4 @@
-const { Joi } = require("express-validation");
+const { Joi } = require('express-validation');
 
 exports.createCategoryValidation = {
   body: Joi.object({
