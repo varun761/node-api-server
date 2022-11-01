@@ -61,7 +61,6 @@ exports.listPosts = async (req, res) => {
     }
     return apiResponse(res, responseCodes.SUCCESS, null, responseObj);
   } catch (e) {
-    console.log(e);
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message);
   }
 };
@@ -96,7 +95,6 @@ exports.postDetails = async (req, res) => {
     }
     return apiResponse(res, responseCodes.SUCCESS, null, responseObj);
   } catch (e) {
-    console.log(e);
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message);
   }
 };
@@ -134,20 +132,20 @@ exports.listPostById = async (req, res) => {
   }
 };
 
-const deleteSinglePost = (doc) => new Promise(async (resolve, reject) => {
+const deleteSinglePost = (doc) => new Promise((resolve, reject) => {
   try {
     // delete post data
-    await postModel.deleteOne({
+    postModel.deleteOne({
       _id: doc._id,
     });
     // delete comment data
-    await commentModel.deleteMany({
+    commentModel.deleteMany({
       _id: {
         $in: doc.comments,
       },
     });
     // update user
-    await userModel.findOneAndUpdate({
+    userModel.findOneAndUpdate({
       _id: doc.author,
     }, {
       $pull: {
@@ -158,7 +156,7 @@ const deleteSinglePost = (doc) => new Promise(async (resolve, reject) => {
       },
     });
     // update category
-    await categoryModel.findOneAndUpdate({
+    categoryModel.findOneAndUpdate({
       posts: {
         $in: doc._id,
       },
@@ -229,9 +227,10 @@ exports.updatePost = async (req, res) => {
   }
 };
 
-const getPostsCount = (query) => new Promise(async () => {
+const getPostsCount = (query) => new Promise((resolve, reject) => {
   try {
-    const allPostsCounts = await postModel.countDocuments(query);
+    const countDocQuery = postModel.countDocuments(query);
+    const allPostsCounts = Promise.resolve(countDocQuery);
     resolve(allPostsCounts);
   } catch (e) {
     reject(e);
