@@ -36,7 +36,7 @@ exports.login = async (req, res) => {
         // token
         const token = generateToken(user.email, process.env.JWT_SECRET)
         // refresh token
-        const refreshToken = generateToken(user.email, process.env.JWT_REFRESH_SECRET, )
+        const refreshToken = generateToken(user.email, process.env.JWT_REFRESH_SECRET)
         // send response
         return apiResponse(res, responseCodes.SUCCESS, null, {
             token,
