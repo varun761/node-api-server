@@ -1,26 +1,26 @@
-const { Schema, model, Types } = require("mongoose");
-const postModel = require("./post.model");
-const userModel = require("./user.model");
+const { Schema, model, Types } = require('mongoose');
+const postModel = require('./post.model');
+const userModel = require('./user.model');
 
 const likeSchema = new Schema(
   {
     post_id: {
       type: Types.ObjectId,
-      ref: "Post",
+      ref: 'Post',
     },
     author_id: {
       type: Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
   },
   {
     timestamps: {
-      createdAt: "created_at",
+      createdAt: 'created_at',
     },
-  }
+  },
 );
 
-likeSchema.post("save", async function (doc) {
+likeSchema.post('save', async (doc) => {
   try {
     await postModel.findOneAndUpdate(
       {
@@ -31,7 +31,7 @@ likeSchema.post("save", async function (doc) {
         $push: {
           likes: doc._id,
         },
-      }
+      },
     );
     // remove comments from user
     await userModel.findOneAndUpdate(
@@ -43,13 +43,13 @@ likeSchema.post("save", async function (doc) {
         $push: {
           likes: doc._id,
         },
-      }
+      },
     );
   } catch (e) {
     throw new Error(e.message);
   }
 });
 
-const likeModel = new model("Like", likeSchema);
+const likeModel = new model('Like', likeSchema);
 
 module.exports = likeModel;
