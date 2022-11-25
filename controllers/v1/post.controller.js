@@ -5,6 +5,13 @@ const {
 const { apiResponse, responseCodes } = require('../../utility/common.utility');
 const { getCacheValue, setCachevalue, deleteCacheByPattern } = require('../../utility/redis.utility');
 
+/* setTimeout(() => {
+  for (let i = 0; i <= 1001;) {
+    setCachevalue(`posts_${i}`, i);
+    i += 1;
+    console.log('i :', i)
+  }
+}, 4000); */
 exports.createPost = async (req, res) => {
   try {
     const {

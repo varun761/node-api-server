@@ -3,7 +3,7 @@ const { userModel } = require('../database/models');
 const { apiResponse, responseCodes } = require('../utility/common.utility');
 require('dotenv').config();
 
-module.exports = async function (req, res, next) {
+async function verifyRefreshToken(req, res, next) {
   try {
     const authorization = req.headers.authorization || null;
     if (!authorization) return apiResponse(res, responseCodes.UNAUTHORIZED, 'Bearer Token is required.');
@@ -28,4 +28,6 @@ module.exports = async function (req, res, next) {
   } catch (e) {
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message);
   }
-};
+}
+
+module.exports = verifyRefreshToken;
