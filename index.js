@@ -12,6 +12,8 @@ const bodyParser = require('body-parser');
 
 const cors = require('cors');
 
+const compression = require('compression');
+
 const swaggerUi = require('swagger-ui-express');
 
 const swaggerJsdoc = require('swagger-jsdoc');
@@ -35,6 +37,8 @@ const app = express();
 const MONGODB_URL = process.env.MONGODB_URL || null;
 
 const port = process.env.PORT || 8080;
+
+app.use(compression({ level: 9, threshold: 0 }));
 
 app.use(
   cors({

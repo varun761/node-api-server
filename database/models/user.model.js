@@ -92,6 +92,14 @@ userSchema.virtual('date_of_birth').get(function () {
   return moment(date_of_birth).format('DD-MM-yyyy');
 });
 
+userSchema.post('save', function(error, doc, next) {
+  if (error.name === 'MongoServerError' && error.code === 11000) {
+    next(new Error('Email already exist in our database.'));
+  } else {
+    next(error);
+  }
+});
+
 const userModel = new model('User', userSchema);
 
 module.exports = userModel;

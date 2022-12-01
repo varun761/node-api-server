@@ -22,7 +22,7 @@ exports.createUser = async (req, res) => {
     await user.save();
     return apiResponse(res, responseCodes.CREATED_OK, 'User created successfully');
   } catch (e) {
-    errorCatcher.writeError(req, e);
+    // errorCatcher.writeError(req, e);
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message);
   }
 };
