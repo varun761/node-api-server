@@ -5,12 +5,16 @@
   "main": "index.js",
   "scripts": {
     "install-dep": "npm install",
-    "start": "node index.js",
+    "start": "node --prof index.js",
     "start-production": "pm2 start ecosystem.config.js",
     "start-dev": "nodemon index.js",
     "test": "mocha '__test__/*/*.spec.js' --exit"
   },
-  "author": "",
+  "author": "Varun",
+  "bugs": {
+    "url" : "https://github.com/varun761/node-api-server/issues",
+    "email" : "sharma.varun76@yahoo.in"
+  },
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",
