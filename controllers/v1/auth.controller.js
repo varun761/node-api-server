@@ -1,5 +1,5 @@
 require('dotenv').config();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { userModel } = require('../../database/models');
 const { apiResponse, responseCodes } = require('../../utility/common.utility');
@@ -30,7 +30,7 @@ exports.login = async (req, res) => {
       return apiResponse(res, responseCodes.UNAUTHORIZED, errorMessages.INVALID_EMAIL_PASSWORD);
     }
     // expires in
-    const expiresIn = 60 * 60 * 60;
+    // const expiresIn = 60 * 60 * 60;
     // token
     const token = generateToken(user.email, process.env.JWT_SECRET);
     // refresh token
@@ -39,7 +39,7 @@ exports.login = async (req, res) => {
     return apiResponse(res, responseCodes.SUCCESS, null, {
       token,
       refreshToken,
-      expiresIn,
+      // expiresIn,
     });
   } catch (e) {
     return apiResponse(res, responseCodes.SERVER_ERROR, e.message);

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { userModel } = require('../../database/models');
 const { apiResponse, responseCodes } = require('../../utility/common.utility');
 const ErrorHandler = require('../../utility/errorHandler.utility');
